@@ -21,7 +21,7 @@ public class ArticleService {
     private String fileDirPath;
 
     public RsData<Article> create(String title, String subject, int price, String area, MultipartFile postImage) {
-        String postImageRelPath = "article/" + UUID.randomUUID().toString() + ".jpg";
+        String postImageRelPath = "postImage/" + UUID.randomUUID().toString() + ".jpg";
         File postImageFile = new File(fileDirPath + "/" + postImageRelPath);
 
         try {

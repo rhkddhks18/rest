@@ -67,7 +67,7 @@ public class ArticleController {
     }
 
     @PostMapping("")
-    public RsData<Article> write(@Valid @RequestBody WriteRequest writeRequest) {
+    public RsData<Article> write(@Valid WriteRequest writeRequest) {
 
         RsData<Article> RsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea(),writeRequest.getPostImage());
 
