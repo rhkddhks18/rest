@@ -2,24 +2,41 @@ package com.example.rest.article;
 
 import com.example.rest.RsData;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
+    @Value("${custom.genFile.dirPath}")
+    private String fileDirPath;
 
-    public RsData<Article> create(String title, String subject, int price, String area) {
+    public RsData<Article> create(String title, String subject, int price, String area, MultipartFile postImage) {
+        String postImageRelPath = "article/" + UUID.randomUUID().toString() + ".jpg";
+        File postImageFile = new File(fileDirPath + "/" + postImageRelPath);
+
+        try {
+            postImage.transferTo(postImageFile);
+        } catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+
         Article a = new Article();
 
         a.setContent(title);
         a.setSubject(subject);
         a.setPrice(price);
         a.setArea(area);
+        a.setPostImage(String.valueOf(postImage));
         a.setCreateDate(LocalDateTime.now());
 
         this.articleRepository.save(a);

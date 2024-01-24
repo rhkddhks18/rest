@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -61,12 +62,14 @@ public class ArticleController {
         private int price;
         @NotBlank
         private String area;
+        @NotNull
+        private MultipartFile postImage;
     }
 
     @PostMapping("")
     public RsData<Article> write(@Valid @RequestBody WriteRequest writeRequest) {
 
-        RsData<Article> RsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea());
+        RsData<Article> RsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea(),writeRequest.getPostImage());
 
         return RsArticle;
     }
@@ -101,6 +104,5 @@ public class ArticleController {
         RsData<Article> articleRsData = this.articleService.delete(article);
         return articleRsData;
     }
-
 
 }

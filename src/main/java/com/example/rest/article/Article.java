@@ -4,8 +4,8 @@ package com.example.rest.article;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -16,6 +16,9 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Entity
 @Setter
 @Getter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Article {
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -25,9 +28,12 @@ public class Article {
     private String content;
     private int price;
     private String area;
+    private String postImage;
 
     @CreatedDate
     private LocalDateTime createDate;
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+
 }
