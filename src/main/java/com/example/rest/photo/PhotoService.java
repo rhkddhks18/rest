@@ -1,4 +1,4 @@
-package com.example.rest.image;
+package com.example.rest.photo;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,13 +10,13 @@ import java.io.IOException;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ImageService {
-    private final ImageRepository imageRepository;
+public class PhotoService {
+    private final PhotoRepository imageRepository;
 
     public String uploadImage(MultipartFile file) throws IOException {
         log.info("upload file: {}", file);
-        ImageData imageData = imageRepository.save(
-                ImageData.builder()
+        Photo imageData = imageRepository.save(
+                Photo.builder()
                         .name(file.getOriginalFilename())
                         .type(file.getContentType())
                         .imageData(ImageUtils.compressImage(file.getBytes()))
@@ -31,7 +31,7 @@ public class ImageService {
 
     // 이미지 파일로 압축하기
     public byte[] downloadImage(String fileName) {
-        ImageData imageData = imageRepository.findByName(fileName)
+        Photo imageData = imageRepository.findByName(fileName)
                 .orElseThrow(RuntimeException::new);
 
         log.info("download imageData: {}", imageData);

@@ -1,4 +1,4 @@
-package com.example.rest.image;
+package com.example.rest.photo;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,8 +12,8 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/image")
-public class ImageController {
-    private final ImageService imageService;
+public class PhotoController {
+    private final PhotoService imageService;
 
     // 업로드
     @PostMapping
