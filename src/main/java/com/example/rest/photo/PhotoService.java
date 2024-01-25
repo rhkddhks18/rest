@@ -1,41 +1,50 @@
 package com.example.rest.photo;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class PhotoService {
-    private final PhotoRepository imageRepository;
+    private final PhotoRepository photoRepository;
 
-    public String uploadImage(MultipartFile file) throws IOException {
-        log.info("upload file: {}", file);
-        Photo imageData = imageRepository.save(
-                Photo.builder()
-                        .name(file.getOriginalFilename())
-                        .type(file.getContentType())
-                        .imageData(ImageUtils.compressImage(file.getBytes()))
-                        .build());
-        if (imageData != null) {
-            log.info("imageData: {}", imageData);
-            return "file uploaded successfully : " + file.getOriginalFilename();
-        }
+    /**
+     * 이미지 개별 조회
+     */
+    @Transactional(readOnly = true)
+    public PhotoDto findByFileId(Long id){
 
-        return null;
+        Photo entity = photoRepository.findById(id).orElseThrow(()
+                -> new IllegalArgumentException("해당 파일이 존재하지 않습니다."));
+
+        PhotoDto photoDto = PhotoDto.builder()
+                .origFileName(entity.getOrigFileName())
+                .filePath(entity.getFilePath())
+                .fileSize(entity.getFileSize())
+                .build();
+
+        return photoDto;
     }
 
-    // 이미지 파일로 압축하기
-    public byte[] downloadImage(String fileName) {
-        Photo imageData = imageRepository.findByName(fileName)
-                .orElseThrow(RuntimeException::new);
+    /**
+     * 이미지 전체 조회
+     */
+    @Transactional(readOnly = true)
+    public List<PhotoResponseDto> findAllByBoard(Long boardId){
 
-        log.info("download imageData: {}", imageData);
+        List<Photo> photoList = photoRepository.findAllByArticleId(boardId);
 
-        return ImageUtils.decompressImage(imageData.getImageData());
+        return photoList.stream()
+                .map(PhotoResponseDto::new)
+                .collect(Collectors.toList());
     }
+
 }

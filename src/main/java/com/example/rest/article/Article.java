@@ -29,7 +29,7 @@ public class Article {
     private int price;
     private String area;
     @OneToMany(
-            mappedBy = "board",
+            mappedBy = "article",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )

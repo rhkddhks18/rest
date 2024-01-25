@@ -1,6 +1,7 @@
 package com.example.rest.article;
 
 import com.example.rest.RsData;
+import com.example.rest.photo.PhotoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final PhotoService fileService;
 
     @AllArgsConstructor
     @Getter
@@ -63,11 +65,11 @@ public class ArticleController {
         @NotBlank
         private String area;
         @NotNull
-        private MultipartFile postImage;
+        private List<MultipartFile> postImage;
     }
 
     @PostMapping("")
-    public RsData<Article> write(@Valid WriteRequest writeRequest) {
+    public RsData<Article> write(@Valid WriteRequest writeRequest) throws Exception{
 
         RsData<Article> RsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea(),writeRequest.getPostImage());
 

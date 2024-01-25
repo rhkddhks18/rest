@@ -1,9 +1,13 @@
 package com.example.rest.article;
 
 import com.example.rest.RsData;
+import com.example.rest.photo.FileHandler;
+import com.example.rest.photo.Photo;
+import com.example.rest.photo.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,18 +21,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
-    @Value("${custom.genFile.dirPath}")
-    private String fileDirPath;
+    private final PhotoRepository photoRepository;
+    private final FileHandler fileHandler;
 
-    public RsData<Article> create(String title, String subject, int price, String area, MultipartFile postImage) {
-        String postImageRelPath = "postImage/" + UUID.randomUUID().toString() + ".jpg";
-        File postImageFile = new File(fileDirPath + "/" + postImageRelPath);
-
-        try {
-            postImage.transferTo(postImageFile);
-        } catch (IOException e) {
-            throw  new RuntimeException(e);
-        }
+    @Transactional
+    public RsData<Article> create(String title, String subject, int price, String area, List<MultipartFile> postImage) throws Exception {
 
         Article a = new Article();
 
@@ -36,10 +33,18 @@ public class ArticleService {
         a.setSubject(subject);
         a.setPrice(price);
         a.setArea(area);
-        a.setPostImage(String.valueOf(postImage));
         a.setCreateDate(LocalDateTime.now());
 
-        this.articleRepository.save(a);
+        List<Photo> photoList = fileHandler.parseFileInfo(postImage);
+
+        // 파일이 존재할 때에만 처리
+        if(!photoList.isEmpty()) {
+            for(Photo photo : photoList) {
+                // 파일을 DB에 저장
+                a.addPhoto(photoRepository.save(photo));
+            }
+        }
+        this.articleRepository.save(a).getId();
 
         return RsData.of("S-2", "게시물이 생성되었습니다.", a);
     }

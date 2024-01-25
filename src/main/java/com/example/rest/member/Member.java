@@ -1,14 +1,14 @@
-//package com.example.rest.member;
-//
-//import com.example.rest.article.Article;
-//import jakarta.persistence.*;
-//import lombok.Builder;
-//import lombok.Getter;
-//import lombok.NoArgsConstructor;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
+package com.example.rest.member;
+
+import com.example.rest.article.Article;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 //@Getter
 //@NoArgsConstructor
 //@Entity

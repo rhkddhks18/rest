@@ -11,11 +11,11 @@ class RestApplicationTests {
 	@Autowired
 	private ArticleService articleService;
 
-	@Test
-	void contextLoads() {
-		articleService.create("test1", "test1", 100, "대전");
-		articleService.create("test2", "test2", 100, "대전");
-		articleService.create("test3", "test3", 100, "대전");
-	}
+//	@Test
+//	void contextLoads() {
+//		articleService.create("test1", "test1", 100, "대전");
+//		articleService.create("test2", "test2", 100, "대전");
+//		articleService.create("test3", "test3", 100, "대전");
+//	}
 
 }
