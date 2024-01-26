@@ -5,17 +5,13 @@ import com.example.rest.photo.FileHandler;
 import com.example.rest.photo.Photo;
 import com.example.rest.photo.PhotoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,28 +21,33 @@ public class ArticleService {
     private final FileHandler fileHandler;
 
     @Transactional
-    public RsData<Article> create(String title, String subject, int price, String area, List<MultipartFile> postImage) throws Exception {
-
+    public RsData<ArticleCreateDto> create(String title, String subject, int price, String area, String category, List<MultipartFile> postImage) throws Exception {
         Article a = new Article();
-
         a.setContent(title);
         a.setSubject(subject);
         a.setPrice(price);
         a.setArea(area);
+        a.setCategory(category);
         a.setCreateDate(LocalDateTime.now());
 
         List<Photo> photoList = fileHandler.parseFileInfo(postImage);
 
-        // 파일이 존재할 때에만 처리
-        if(!photoList.isEmpty()) {
-            for(Photo photo : photoList) {
-                // 파일을 DB에 저장
+        if (!photoList.isEmpty()) {
+            for (Photo photo : photoList) {
                 a.addPhoto(photoRepository.save(photo));
             }
         }
         this.articleRepository.save(a).getId();
 
-        return RsData.of("S-2", "게시물이 생성되었습니다.", a);
+        // ArticleDto로 변환
+        ArticleCreateDto articleDto = new ArticleCreateDto();
+        articleDto.setSubject(a.getSubject());
+        articleDto.setContent(a.getContent());
+        articleDto.setPrice(a.getPrice());
+        articleDto.setArea(a.getArea());
+        articleDto.setCategory(a.getCategory());
+
+        return RsData.of("S-2", "게시물이 생성되었습니다.", articleDto);
     }
 
     public List<Article> getList() {

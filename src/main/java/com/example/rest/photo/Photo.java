@@ -1,6 +1,7 @@
 package com.example.rest.photo;
 
 import com.example.rest.article.Article;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +20,7 @@ public class Photo {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "article_id")
     private Article article;
 

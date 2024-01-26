@@ -1,5 +1,6 @@
 package com.example.rest.photo;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Component
 public class FileHandler {
+    @Value("${custom.genFile.dirPath}")
+    private String fileDirPath;
 
     private final PhotoService photoService;
 
@@ -38,8 +41,9 @@ public class FileHandler {
             // 경로 구분자 File.separator 사용
             String absolutePath = new File("").getAbsolutePath() + File.separator + File.separator;
 
+
             // 파일을 저장할 세부 경로 지정
-            String path = "images" + File.separator + current_date;
+            String path = fileDirPath + File.separator + "images" + File.separator + current_date;
             File file = new File(path);
 
             // 디렉터리가 존재하지 않을 경우

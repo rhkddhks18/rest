@@ -2,6 +2,7 @@ package com.example.rest.article;
 
 
 import com.example.rest.photo.Photo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -28,12 +29,15 @@ public class Article {
     private String content;
     private int price;
     private String area;
+    private String category;
     @OneToMany(
             mappedBy = "article",
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             orphanRemoval = true
     )
+    @JsonManagedReference
     private List<Photo> photo = new ArrayList<>();
+
 
     @CreatedDate
     private LocalDateTime createDate;

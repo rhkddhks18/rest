@@ -64,16 +64,18 @@ public class ArticleController {
         private int price;
         @NotBlank
         private String area;
+        @NotBlank
+        private String category;
         @NotNull
         private List<MultipartFile> postImage;
     }
 
     @PostMapping("")
-    public RsData<Article> write(@Valid WriteRequest writeRequest) throws Exception{
+    public RsData<ArticleCreateDto> write(@Valid WriteRequest writeRequest) throws Exception{
 
-        RsData<Article> RsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea(),writeRequest.getPostImage());
+        RsData<ArticleCreateDto> rsArticle = this.articleService.create(writeRequest.getSubject(), writeRequest.getContent(), writeRequest.getPrice(), writeRequest.getArea(), writeRequest.getCategory(), writeRequest.getPostImage());
 
-        return RsArticle;
+        return rsArticle;
     }
 
     @AllArgsConstructor
